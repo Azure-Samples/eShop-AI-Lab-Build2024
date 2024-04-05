@@ -490,3 +490,10 @@ $RECYCLE.BIN/
 /playwright/.cache/
 /playwright/.auth/
 /user.json
+.azure
+
+# Aspire generated
+azure.yaml
+infra
+next-steps.md
+manifests
