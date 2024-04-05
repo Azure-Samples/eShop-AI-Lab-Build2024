@@ -7,9 +7,18 @@ builder.AddForwardedHeaders();
 
 var redis = builder.AddRedis("redis");
 var rabbitMq = builder.AddRabbitMQ("eventbus");
-var postgres = builder.AddPostgres("postgres")
-    .WithImage("ankane/pgvector")
-    .WithImageTag("latest");
+
+var postgres = builder.AddPostgres("postgres");
+
+if (!builder.ExecutionContext.IsPublishMode)
+{
+    postgres.WithImage("pgvector/pgvector").WithImageTag("pg16");
+}
+else
+{
+    postgres.ConfigureForAzure();
+    redis.ConfigureForAzure();
+}
 
 var catalogDb = postgres.AddDatabase("catalogdb");
 var identityDb = postgres.AddDatabase("identitydb");
@@ -66,7 +75,7 @@ var webApp = builder.AddProject<Projects.WebApp>("webapp", "http")
     .WithEnvironment("IdentityUrl", idpHttps);
 
 // set to true if you want to use OpenAI
-bool useOpenAI = false;
+bool useOpenAI = true;
 if (useOpenAI)
 {
     const string openAIName = "openai";
@@ -79,10 +88,17 @@ if (useOpenAI)
     //     -or-
     //   "openai": "Endpoint=https://<name>.openai.azure.com/" (to use Azure OpenAI)
     // }
-    IResourceBuilder<IResourceWithConnectionString> openAI;
     if (builder.Configuration.GetConnectionString(openAIName) is not null)
     {
-        openAI = builder.AddConnectionString(openAIName);
+        var openAI = builder.AddConnectionString(openAIName);
+
+        catalogApi
+            .WithReference(openAI)
+            .WithEnvironment("AI__OPENAI__EMBEDDINGNAME", textEmbeddingName);
+
+        webApp
+            .WithReference(openAI)
+            .WithEnvironment("AI__OPENAI__CHATMODEL", chatModelName); ;
     }
     else
     {
@@ -91,18 +107,22 @@ if (useOpenAI)
         //   "SubscriptionId": "<your subscription ID>"
         //   "Location": "<location>"
         // }
-        openAI = builder.AddAzureOpenAI(openAIName)
-            .AddDeployment(new AzureOpenAIDeployment(chatModelName, "gpt-35-turbo", "0613"))
+        var chatAIResource = builder.AddAzureOpenAI(openAIName)
+            .AddDeployment(new AzureOpenAIDeployment(chatModelName, "gpt-35-turbo", "0613"));
+
+        var embeddingAIResource = builder.AddAzureOpenAI($"embedding")
             .AddDeployment(new AzureOpenAIDeployment(textEmbeddingName, "text-embedding-ada-002", "2"));
+
+        catalogApi
+            .WithReference(chatAIResource)
+            .WithReference(embeddingAIResource)
+            .WithEnvironment("AI__OPENAI__EMBEDDINGNAME", textEmbeddingName);
+
+        webApp
+            .WithReference(chatAIResource)
+            .WithReference(embeddingAIResource)
+            .WithEnvironment("AI__OPENAI__CHATMODEL", chatModelName);
     }
-
-    catalogApi
-        .WithReference(openAI)
-        .WithEnvironment("AI__OPENAI__EMBEDDINGNAME", textEmbeddingName);
-
-    webApp
-        .WithReference(openAI)
-        .WithEnvironment("AI__OPENAI__CHATMODEL", chatModelName); ;
 }
 
 // Wire up the callback urls (self referencing)

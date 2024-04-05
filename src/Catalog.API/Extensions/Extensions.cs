@@ -33,6 +33,7 @@ public static class Extensions
         if (!string.IsNullOrWhiteSpace(builder.Configuration.GetConnectionString("openai")))
         {
             builder.AddAzureOpenAIClient("openai");
+            builder.AddAzureOpenAIClient("embedding");
         }
 
         builder.Services.AddSingleton<ICatalogAI, CatalogAI>();
