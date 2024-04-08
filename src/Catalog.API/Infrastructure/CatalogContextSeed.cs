@@ -1,12 +1,10 @@
 ﻿using System.Text.Json;
-using eShop.Catalog.API.Services;
 
 namespace eShop.Catalog.API.Infrastructure;
 
 public partial class CatalogContextSeed(
     IWebHostEnvironment env,
     IOptions<CatalogOptions> settings,
-    ICatalogAI catalogAI,
     ILogger<CatalogContextSeed> logger) : IDbSeeder<CatalogContext>
 {
     public async Task SeedAsync(CatalogContext context)
@@ -52,30 +50,10 @@ public partial class CatalogContextSeed(
                 MaxStockThreshold = 200,
                 RestockThreshold = 10,
                 PictureFileName = $"{source.Id}.webp",
-                Embedding = catalogAI.IsEnabled ? new Pgvector.Vector(source.Embedding) : null,
             }));
 
             logger.LogInformation("Seeded catalog with {NumItems} items", context.CatalogItems.Count());
             await context.SaveChangesAsync();
-
-            if (catalogAI.IsEnabled)
-            {
-                bool anyChanged = false;
-                foreach (var item in context.CatalogItems)
-                {
-                    if (item.Embedding is null)
-                    {
-                        logger.LogInformation("Creating embedding for catalog item {ItemId} ({ItemName})", item.Id, item.Name);
-                        item.Embedding = await catalogAI.GetEmbeddingAsync(item);
-                        anyChanged = true;
-                    }
-                }
-
-                if (anyChanged)
-                {
-                    await context.SaveChangesAsync();
-                }
-            }
         }
     }
 
@@ -87,6 +65,5 @@ public partial class CatalogContextSeed(
         public string Name { get; set; }
         public string Description { get; set; }
         public decimal Price { get; set; }
-        public float[] Embedding { get; set; }
     }
 }

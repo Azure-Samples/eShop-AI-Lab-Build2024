@@ -1,15 +1,10 @@
-﻿using eShop.Catalog.API.Services;
-
-public static class Extensions
+﻿public static class Extensions
 {
     public static void AddApplicationServices(this IHostApplicationBuilder builder)
     {
         builder.AddNpgsqlDbContext<CatalogContext>("catalogdb", configureDbContextOptions: dbContextOptionsBuilder =>
         {
-            dbContextOptionsBuilder.UseNpgsql(builder =>
-            {
-                builder.UseVector();
-            });
+            dbContextOptionsBuilder.UseNpgsql();
         });
 
         // REVIEW: This is done for development ease but shouldn't be here in production
@@ -26,16 +21,5 @@ public static class Extensions
 
         builder.Services.AddOptions<CatalogOptions>()
             .BindConfiguration(nameof(CatalogOptions));
-
-        builder.Services.AddOptions<AIOptions>()
-            .BindConfiguration("AI");
-
-        if (!string.IsNullOrWhiteSpace(builder.Configuration.GetConnectionString("openai")))
-        {
-            builder.AddAzureOpenAIClient("openai");
-            builder.AddAzureOpenAIClient("embedding");
-        }
-
-        builder.Services.AddSingleton<ICatalogAI, CatalogAI>();
     }
 }

@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore.Migrations;
-using Pgvector;
 
 #nullable disable
 
@@ -11,9 +10,6 @@ namespace eShop.Catalog.API.Infrastructure.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AlterDatabase()
-                .Annotation("Npgsql:PostgresExtension:vector", ",,");
-
             migrationBuilder.CreateSequence(
                 name: "catalog_brand_hilo",
                 incrementBy: 10);
@@ -64,7 +60,6 @@ namespace eShop.Catalog.API.Infrastructure.Migrations
                     AvailableStock = table.Column<int>(type: "integer", nullable: false),
                     RestockThreshold = table.Column<int>(type: "integer", nullable: false),
                     MaxStockThreshold = table.Column<int>(type: "integer", nullable: false),
-                    Embedding = table.Column<Vector>(type: "vector(1536)", nullable: true),
                     OnReorder = table.Column<bool>(type: "boolean", nullable: false)
                 },
                 constraints: table =>
