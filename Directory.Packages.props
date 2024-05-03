@@ -5,7 +5,7 @@
     <AspnetVersion>8.0.3</AspnetVersion>
     <MicrosoftExtensionsVersion>8.3.0</MicrosoftExtensionsVersion>
     <EfVersion>8.0.3</EfVersion>
-    <AspireVersion>8.0.0-preview.5.24178.10</AspireVersion>
+    <AspireVersion>8.0.0-preview.7.24251.11</AspireVersion>
     <GrpcVersion>2.62.0</GrpcVersion>
     <DuendeVersion>7.0.3</DuendeVersion>
   </PropertyGroup>
@@ -48,7 +48,7 @@
     <PackageVersion Include="AspNetCore.HealthChecks.Uris" Version="8.0.0" />
     <!-- Open Telemetry -->
     <PackageVersion Include="OpenTelemetry.Exporter.OpenTelemetryProtocol" Version="1.7.0" />
-    <PackageVersion Include="OpenTelemetry.Extensions.Hosting" Version="1.7.0" />
+    <PackageVersion Include="OpenTelemetry.Extensions.Hosting" Version="1.8.1" />
     <PackageVersion Include="OpenTelemetry.Instrumentation.AspNetCore" Version="1.7.1" />
     <PackageVersion Include="OpenTelemetry.Instrumentation.GrpcNetClient" Version="1.6.0-beta.3" />
     <PackageVersion Include="OpenTelemetry.Instrumentation.Http" Version="1.7.1" />
