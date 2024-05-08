@@ -56,13 +56,13 @@ internal static class Extensions
     }
     """);
 
-#pragma warning disable ASPIRE0001 // Type is for evaluation purposes only and is subject to change or removal in future updates. Suppress this diagnostic to proceed.
+#pragma warning disable AZPROVISION001 // Type is for evaluation purposes only and is subject to change or removal in future updates. Suppress this diagnostic to proceed.
         postgres.PublishAsAzurePostgresFlexibleServer((resource, construct, server) =>
         {
             construct.AddOutput(server.AddOutput("name", data => data.Name));
             template.WithParameter("postgresServerName", resource.GetOutput("name"));
         });
-#pragma warning restore ASPIRE0001 // Type is for evaluation purposes only and is subject to change or removal in future updates. Suppress this diagnostic to proceed.
+#pragma warning restore AZPROVISION001 // Type is for evaluation purposes only and is subject to change or removal in future updates. Suppress this diagnostic to proceed.
         return postgres;
     }
 
