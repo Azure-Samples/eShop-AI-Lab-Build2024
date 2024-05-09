@@ -1,86 +1,68 @@
-# eShop Reference Application - "Northern Mountains"
+# Learn how to easily integrate AI into your .NET apps
 
-A reference .NET application implementing an eCommerce web site using a services-based architecture.
+## Welcome
 
-![eShop Reference Application architecture diagram](img/eshop_architecture.png)
+Welcome to Learn how to easily integrate AI into your .NET apps. In this Lab, you are going to learn how to make integrations between a current existing App with Azure AI and AI services. We are thrilled to guide you through the process of enhancing your applications with the power of artificial intelligence, all of this using the incredible [eShop template](https://github.com/dotnet/eshop)!
 
-![eShop homepage screenshot](img/eshop_homepage.png)
+In this lab, you will:
 
-## Getting Started
+- Understand how to implement **Azure OpenAI** and **Semantic Kernel** from scratch, gaining a deep understanding of these powerful tools.
+- Dive into the **eShop sample code**, exploring its intricacies and learning how to interact with it effectively.
+- Discover how to incorporate an **Intelligent Chat feature** into your applications using Aspire and Blazor, enhancing user engagement and experience.
 
-### Prerequisites
+For this workshop, you will need:
 
-- Clone the eShop repository: https://github.com/dotnet/eshop
-- (Windows only) Install Visual Studio. Visual Studio contains tooling support for .NET Aspire that you will want to have. [Visual Studio 2022 version 17.10 Preview](https://visualstudio.microsoft.com/vs/preview/).
-  - During installation, ensure that the following are selected:
-    - `ASP.NET and web development` workload.
-    - `.NET Aspire SDK` component in `Individual components`.
-- Install the latest [.NET 8 SDK](https://github.com/dotnet/installer#installers-and-binaries)
-- On Mac/Linux (or if not using Visual Studio), install the Aspire workload with the following commands:
-```powershell
-dotnet workload update
-dotnet workload install aspire
-dotnet restore eShop.Web.slnf
-```
-- Install & start Docker Desktop:  https://docs.docker.com/engine/install/
+- **Azure OpenAI Service**
+    - A instance for text generation, featuring  GPT 3.5 or a newer model.
+    - A instance to generate our Embeddings, utilizing Text Embedding Ada 002 or a newer model.
+- Tooling
+    - Visual Studio equipped with .NET 8 and .NET Aspire.
+    - Git, for version control and collaborative development.
+    - Docker, to manage messaging with RabbitMQ, Redis, PgVector - Version 16 and Postgres.
+    - Azure Developer CLI.
 
-### Running the solution
+Let’s elevate your .NET applications to new heights with Azure AI. We can’t wait to see what you’ll build!
 
-> [!WARNING]
-> Remember to ensure that Docker is started
+## Services Setup
 
-* (Windows only) Run the application from Visual Studio:
- - Open the `eShop.Web.slnf` file in Visual Studio
- - Ensure that `eShop.AppHost.csproj` is your startup project
- - Hit Ctrl-F5 to launch Aspire
+First, clone this repository!
 
-* Or run the application from your terminal:
-```powershell
-dotnet run --project src/eShop.AppHost/eShop.AppHost.csproj
-```
-then look for lines like this in the console output in order to find the URL to open the Aspire dashboard:
-```sh
-Now listening on: http://localhost:18848
-```
+With the solution open, it’s time to set up your development environment:
 
-### Sample data
+- Open the Command Line Interface (CLI): Navigate to `View -> Terminal` or use the shortcut Ctrl + `  to open the integrated terminal within Visual Studio.
 
-The sample catalog data is defined in [catalog.json](https://github.com/dotnet/eShop/blob/main/src/Catalog.API/Setup/catalog.json). Those product names, descriptions, and brand names are fictional and were generated using [GPT-35-Turbo](https://learn.microsoft.com/en-us/azure/ai-services/openai/how-to/chatgpt), and the corresponding [product images](https://github.com/dotnet/eShop/tree/main/src/Catalog.API/Pics) were generated using [DALL·E 3](https://openai.com/dall-e-3).
+![Open Console](./img/00-OpenConsole.png)
 
-## Use Azure Developer CLI
+- Navigate to the Project Folder: Use the command `cd .\src\eShop.AppHost\` to change directories to the eShop.AppHost folder, where you’ll be running commands to set up the project.
 
-You can use the [Azure Developer CLI](https://aka.ms/azd) to run this project on Azure with only a few commands. Follow the next instructions:
+![Type Commmand to go to the correct folder](./img/01-Command.png)
 
-- Install [azd](https://aka.ms/azure-dev/install).
-- Log in `azd` (if you haven't done it before) to your Azure account:
-```sh
-azd auth login
-```
-- Initialize `azd` from the root of the repo.
-```sh
-azd init
-```
-- During init:
-  - Select `Use code in the current directory`. Azd will automatically detect the Dotnet Aspire project.
-  - Confirm `.Net (Aspire)` and continue.
-  - Select which services to expose to the Internet (exposing `webapp` is enough to test the sample).
-  - Finalize the initialization by giving a name to your environment.
+- To integrate Azure AI capabilities into eShop, you’ll need to install the Azure AI hosting support package:
 
-- Create Azure resources and deploy the sample by running:
-```sh
-azd up
-```
-Notes:
-  - The operation takes a few minutes the first time it is ever run for an environment.
-  - At the end of the process, `azd` will display the `url` for the webapp. Follow that link to test the sample.
-  - You can run `azd up` after saving changes to the sample to re-deploy and update the sample.
-  - Report any issues to [azure-dev](https://github.com/Azure/azure-dev/issues) repo.
-  - [FAQ and troubleshoot](https://learn.microsoft.com/azure/developer/azure-developer-cli/troubleshoot?tabs=Browser) for azd.
+`dotnet add package Aspire.Hosting.Azure.CognitiveServices --version 8.0.0-preview.5.24201.12`
 
-## Contributing
+With the package installed, you’ll configure access to your AI resources:
+1. **Set Subscription ID**: Replace <subId from Skillable> with your actual Azure subscription ID to set the user secret. `dotnet user-secrets set "Azure:SubscriptionId" <subId from Skillable>` 
+1. **Set Resource Group Location**: Replace <RG location from Skillable> with the location of your resource group. `dotnet user-secrets set "Azure:Location" <RG location from Skillable>`
+1. **Enable AI**: Use the command `dotnet user-secrets set EnableAI true` to enable AI features in your project.
 
-For more information on contributing to this repo, please read [the contribution documentation](./CONTRIBUTING.md) and [the Code of Conduct](CODE-OF-CONDUCT.md).
+Finally, it’s time to see eShop in action:
 
-## eShop on Azure
+- Press Ctrl + F5 to run the application without debugging.
+- If Visual Studio asks you to run Docker, press `Yes` to run the background applications.
 
-For a version of this app configured for deployment on Azure, please view [the eShop on Azure](https://github.com/Azure-Samples/eShopOnAzure) repo.
+!IMAGE[Captura de tela 2024-05-09 114245.png](instructions259607/Captura de tela 2024-05-09 114245.png)
+
+- You are going to get greeted by a Console and a Login screen, follow the instructions to see the dashboard.
+
+![Automatically open Docker](./img/02-DockerBox.png)
+
+![Login to the App](./img/03-Login.png)
+
+- At the dashboard, you will have access to all services and click on the WebApp to see our eShop without the AI features implemented.
+
+![Dashboard](./img/04-Dashboard.png)
+
+![eShop with no AI Chat](./img/05-eShopNoAi.png)
+
+Now, let's configure eShop to recieve AI Capabilities. Going to the next step to Configure it to recieve our CatalogAPI.
