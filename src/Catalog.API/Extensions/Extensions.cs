@@ -1,4 +1,6 @@
-﻿public static class Extensions
+﻿using eShop.Catalog.API.Services;
+
+public static class Extensions
 {
     public static void AddApplicationServices(this IHostApplicationBuilder builder)
     {
@@ -21,5 +23,7 @@
 
         builder.Services.AddOptions<CatalogOptions>()
             .BindConfiguration(nameof(CatalogOptions));
+
+        builder.Services.AddSingleton<ICatalogAI, CatalogAI>();
     }
 }

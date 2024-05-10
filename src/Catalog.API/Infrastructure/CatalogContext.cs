@@ -17,6 +17,7 @@ public class CatalogContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
+        builder.HasPostgresExtension("vector");
         builder.ApplyConfiguration(new CatalogBrandEntityTypeConfiguration());
         builder.ApplyConfiguration(new CatalogTypeEntityTypeConfiguration());
         builder.ApplyConfiguration(new CatalogItemEntityTypeConfiguration());

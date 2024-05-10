@@ -10,6 +10,9 @@ namespace eShop.Catalog.API.Infrastructure.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.AlterDatabase()
+                .Annotation("Npgsql:PostgresExtension:vector", ",,");
+
             migrationBuilder.CreateSequence(
                 name: "catalog_brand_hilo",
                 incrementBy: 10);
