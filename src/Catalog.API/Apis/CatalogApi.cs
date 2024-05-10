@@ -130,6 +130,7 @@ public static class CatalogApi
             return await GetItemsByName(paginationRequest, services, text);
         }
 
+        // TODO - AI features
         throw new NotImplementedException();
     }
 
