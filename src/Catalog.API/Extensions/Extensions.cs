@@ -1,11 +1,10 @@
-﻿public static class Extensions
+﻿using eShop.Catalog.API.Services;
+
+public static class Extensions
 {
     public static void AddApplicationServices(this IHostApplicationBuilder builder)
     {
-        builder.AddNpgsqlDbContext<CatalogContext>("catalogdb", configureDbContextOptions: dbContextOptionsBuilder =>
-        {
-            dbContextOptionsBuilder.UseNpgsql();
-        });
+        builder.AddNpgsqlDbContext<CatalogContext>("catalogdb");
 
         // REVIEW: This is done for development ease but shouldn't be here in production
         builder.Services.AddMigration<CatalogContext, CatalogContextSeed>();
@@ -21,5 +20,7 @@
 
         builder.Services.AddOptions<CatalogOptions>()
             .BindConfiguration(nameof(CatalogOptions));
+
+        builder.Services.AddSingleton<ICatalogAI, CatalogAI>();
     }
 }

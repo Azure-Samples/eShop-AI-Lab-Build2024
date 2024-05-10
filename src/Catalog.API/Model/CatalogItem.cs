@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
+using Pgvector;
 
 namespace eShop.Catalog.API.Model;
 
@@ -15,8 +16,6 @@ public class CatalogItem
     public decimal Price { get; set; }
 
     public string PictureFileName { get; set; }
-
-    public string PictureUri { get; set; }
 
     public int CatalogTypeId { get; set; }
 
