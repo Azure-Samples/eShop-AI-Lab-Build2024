@@ -42,16 +42,4 @@ public static class Extensions
 
         builder.Services.AddSingleton<ICatalogAI, CatalogAI>();
     }
-
-    private static void RegisterVectorDb(this IHostApplicationBuilder builder)
-    {
-        builder.AddKeyedNpgsqlDataSource("catalogdb", null, builder => builder.UseVector());
-
-        builder.Services.AddSingleton<IMemoryStore, PostgresMemoryStore>(provider =>
-        {
-            var dataSource = provider.GetRequiredKeyedService<NpgsqlDataSource>("catalogdb");
-            return new(dataSource, CatalogAI.EmbeddingDimensions);
-        });
-        builder.Services.AddSingleton<ISemanticTextMemory, SemanticTextMemory>();
-    }
 }

@@ -1,4 +1,4 @@
-﻿using Microsoft.SemanticKernel.Embeddings;
+using Microsoft.SemanticKernel.Embeddings;
 using Microsoft.SemanticKernel.Memory;
 
 namespace eShop.Catalog.API.Services;
