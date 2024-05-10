@@ -1,11 +1,13 @@
-﻿public static class Extensions
+﻿using eShop.Catalog.API.Services;
+using Microsoft.SemanticKernel;
+using Microsoft.SemanticKernel.Connectors.Postgres;
+using Microsoft.SemanticKernel.Memory;
+
+public static class Extensions
 {
     public static void AddApplicationServices(this IHostApplicationBuilder builder)
     {
-        builder.AddNpgsqlDbContext<CatalogContext>("catalogdb", configureDbContextOptions: dbContextOptionsBuilder =>
-        {
-            dbContextOptionsBuilder.UseNpgsql();
-        });
+        builder.AddNpgsqlDbContext<CatalogContext>("catalogdb");
 
         // REVIEW: This is done for development ease but shouldn't be here in production
         builder.Services.AddMigration<CatalogContext, CatalogContextSeed>();
@@ -21,5 +23,35 @@
 
         builder.Services.AddOptions<CatalogOptions>()
             .BindConfiguration(nameof(CatalogOptions));
+
+        if (!string.IsNullOrWhiteSpace(builder.Configuration.GetConnectionString("openai")))
+        {
+            builder.AddAzureOpenAIClient("openai");
+            builder.Services.AddAzureOpenAITextEmbeddingGeneration(
+                builder.Configuration["AIOptions:OpenAI:EmbeddingName"] ?? "text-embedding-3-small",
+                dimensions: CatalogAI.EmbeddingDimensions);
+            builder.AddKeyedNpgsqlDataSource("catalogdb", null, builder => builder.UseVector());
+
+            builder.Services.AddSingleton<IMemoryStore, PostgresMemoryStore>(provider =>
+            {
+                var dataSource = provider.GetRequiredKeyedService<NpgsqlDataSource>("catalogdb");
+                return new(dataSource, CatalogAI.EmbeddingDimensions);
+            });
+            builder.Services.AddSingleton<ISemanticTextMemory, SemanticTextMemory>();
+        }
+
+        builder.Services.AddSingleton<ICatalogAI, CatalogAI>();
+    }
+
+    private static void RegisterVectorDb(this IHostApplicationBuilder builder)
+    {
+        builder.AddKeyedNpgsqlDataSource("catalogdb", null, builder => builder.UseVector());
+
+        builder.Services.AddSingleton<IMemoryStore, PostgresMemoryStore>(provider =>
+        {
+            var dataSource = provider.GetRequiredKeyedService<NpgsqlDataSource>("catalogdb");
+            return new(dataSource, CatalogAI.EmbeddingDimensions);
+        });
+        builder.Services.AddSingleton<ISemanticTextMemory, SemanticTextMemory>();
     }
 }

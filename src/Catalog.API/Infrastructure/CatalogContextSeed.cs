@@ -1,10 +1,12 @@
 ﻿using System.Text.Json;
+using eShop.Catalog.API.Services;
 
 namespace eShop.Catalog.API.Infrastructure;
 
 public partial class CatalogContextSeed(
     IWebHostEnvironment env,
     IOptions<CatalogOptions> settings,
+    ICatalogAI catalogAI,
     ILogger<CatalogContextSeed> logger) : IDbSeeder<CatalogContext>
 {
     public async Task SeedAsync(CatalogContext context)
@@ -38,7 +40,7 @@ public partial class CatalogContextSeed(
             var brandIdsByName = await context.CatalogBrands.ToDictionaryAsync(x => x.Brand, x => x.Id);
             var typeIdsByName = await context.CatalogTypes.ToDictionaryAsync(x => x.Type, x => x.Id);
 
-            await context.CatalogItems.AddRangeAsync(sourceItems.Select(source => new CatalogItem
+            var catalogItems = sourceItems.Select(source => new CatalogItem
             {
                 Id = source.Id,
                 Name = source.Name,
@@ -50,8 +52,18 @@ public partial class CatalogContextSeed(
                 MaxStockThreshold = 200,
                 RestockThreshold = 10,
                 PictureFileName = $"{source.Id}.webp",
-            }));
+            }).ToArray();
 
+            if (catalogAI.IsEnabled)
+            {
+                foreach (var catalogItem in catalogItems)
+                {
+                    var id = await catalogAI.SaveToMemoryAsync(catalogItem);
+                    logger.LogInformation("Created memory record for Catalog item with Id {Id}", id);
+                }
+            }
+
+            await context.CatalogItems.AddRangeAsync(catalogItems);
             logger.LogInformation("Seeded catalog with {NumItems} items", context.CatalogItems.Count());
             await context.SaveChangesAsync();
         }

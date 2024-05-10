@@ -4,9 +4,9 @@ using eShop.WebAppComponents.Catalog;
 
 namespace eShop.WebAppComponents.Services;
 
-public class CatalogService(HttpClient httpClient)
+public class CatalogService(HttpClient httpClient) : ICatalogService
 {
-    private readonly string remoteServiceBaseUrl = "api/v1/catalog/";
+    private readonly string remoteServiceBaseUrl = "api/catalog/";
 
     public Task<CatalogItem?> GetCatalogItem(int id)
     {
@@ -25,6 +25,13 @@ public class CatalogService(HttpClient httpClient)
     {
         var uri = $"{remoteServiceBaseUrl}items/by?ids={string.Join("&ids=", ids)}";
         var result = await httpClient.GetFromJsonAsync<List<CatalogItem>>(uri);
+        return result!;
+    }
+
+    public Task<CatalogResult> GetCatalogItemsWithSemanticRelevance(int page, int take, string text)
+    {
+        var url = $"{remoteServiceBaseUrl}items/withsemanticrelevance/{HttpUtility.UrlEncode(text)}?pageIndex={page}&pageSize={take}";
+        var result = httpClient.GetFromJsonAsync<CatalogResult>(url);
         return result!;
     }
 

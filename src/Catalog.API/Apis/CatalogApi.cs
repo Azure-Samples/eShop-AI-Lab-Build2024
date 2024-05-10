@@ -4,25 +4,30 @@ namespace eShop.Catalog.API;
 
 public static class CatalogApi
 {
-    public static IEndpointRouteBuilder MapCatalogApi(this IEndpointRouteBuilder app)
+    public static IEndpointRouteBuilder MapCatalogApiV1(this IEndpointRouteBuilder app)
     {
+        var api = app.MapGroup("api/catalog").HasApiVersion(1.0);
+
         // Routes for querying catalog items.
-        app.MapGet("/items", GetAllItems);
-        app.MapGet("/items/by", GetItemsByIds);
-        app.MapGet("/items/{id:int}", GetItemById);
-        app.MapGet("/items/by/{name:minlength(1)}", GetItemsByName);
-        app.MapGet("/items/{catalogItemId:int}/pic", GetItemPictureById);
+        api.MapGet("/items", GetAllItems);
+        api.MapGet("/items/by", GetItemsByIds);
+        api.MapGet("/items/{id:int}", GetItemById);
+        api.MapGet("/items/by/{name:minlength(1)}", GetItemsByName);
+        api.MapGet("/items/{catalogItemId:int}/pic", GetItemPictureById);
+
+        // Routes for resolving catalog items using AI.
+        api.MapGet("/items/withsemanticrelevance/{text:minlength(1)}", GetItemsBySemanticRelevance);
 
         // Routes for resolving catalog items by type and brand.
-        app.MapGet("/items/type/{typeId}/brand/{brandId?}", GetItemsByBrandAndTypeId);
-        app.MapGet("/items/type/all/brand/{brandId:int?}", GetItemsByBrandId);
-        app.MapGet("/catalogtypes", async (CatalogContext context) => await context.CatalogTypes.OrderBy(x => x.Type).ToListAsync());
-        app.MapGet("/catalogbrands", async (CatalogContext context) => await context.CatalogBrands.OrderBy(x => x.Brand).ToListAsync());
+        api.MapGet("/items/type/{typeId}/brand/{brandId?}", GetItemsByBrandAndTypeId);
+        api.MapGet("/items/type/all/brand/{brandId:int?}", GetItemsByBrandId);
+        api.MapGet("/catalogtypes", async (CatalogContext context) => await context.CatalogTypes.OrderBy(x => x.Type).ToListAsync());
+        api.MapGet("/catalogbrands", async (CatalogContext context) => await context.CatalogBrands.OrderBy(x => x.Brand).ToListAsync());
 
         // Routes for modifying catalog items.
-        app.MapPut("/items",  UpdateItem);
-        app.MapPost("/items", CreateItem);
-        app.MapDelete("/items/{id:int}", DeleteItemById);
+        api.MapPut("/items", UpdateItem);
+        api.MapPost("/items", CreateItem);
+        api.MapDelete("/items/{id:int}", DeleteItemById);
 
         return app;
     }
@@ -112,6 +117,35 @@ public static class CatalogApi
         return TypedResults.PhysicalFile(path, mimetype, lastModified: lastModified);
     }
 
+    public static async Task<Results<BadRequest<string>, RedirectToRouteHttpResult, Ok<PaginatedItems<CatalogItem>>>> GetItemsBySemanticRelevance(
+        [AsParameters] PaginationRequest paginationRequest,
+        [AsParameters] CatalogServices services,
+        string text)
+    {
+        var pageSize = paginationRequest.PageSize;
+        var pageIndex = paginationRequest.PageIndex;
+
+        if (!services.CatalogAI.IsEnabled)
+        {
+            return await GetItemsByName(paginationRequest, services, text);
+        }
+
+        List<CatalogItem> itemsOnPage = [];
+
+        // Get the total number of items
+        var totalItems = await services.Context.CatalogItems
+            .LongCountAsync();
+        var itemsWithDistance = services.CatalogAI.SearchMemoryAsync(text, pageSize);
+
+        await foreach (var item in itemsWithDistance)
+        {
+            var catalogItem = await services.Context.CatalogItems.FindAsync(int.Parse(item.Metadata.Id));
+            itemsOnPage.Add(catalogItem);
+        }
+
+        return TypedResults.Ok(new PaginatedItems<CatalogItem>(pageIndex, pageSize, totalItems, itemsOnPage));
+    }
+
     public static async Task<Ok<PaginatedItems<CatalogItem>>> GetItemsByBrandAndTypeId(
         [AsParameters] PaginationRequest paginationRequest,
         [AsParameters] CatalogServices services,
@@ -180,6 +214,8 @@ public static class CatalogApi
         var catalogEntry = services.Context.Entry(catalogItem);
         catalogEntry.CurrentValues.SetValues(productToUpdate);
 
+        await services.CatalogAI.SaveToMemoryAsync(catalogItem);
+
         var priceEntry = catalogEntry.Property(i => i.Price);
 
         if (priceEntry.IsModified) // Save product's data and publish integration event through the Event Bus if price has changed
@@ -197,7 +233,7 @@ public static class CatalogApi
         {
             await services.Context.SaveChangesAsync();
         }
-        return TypedResults.Created($"/api/v1/catalog/items/{productToUpdate.Id}");
+        return TypedResults.Created($"/api/catalog/items/{productToUpdate.Id}");
     }
 
     public static async Task<Created> CreateItem(
@@ -212,7 +248,6 @@ public static class CatalogApi
             Description = product.Description,
             Name = product.Name,
             PictureFileName = product.PictureFileName,
-            PictureUri = product.PictureUri,
             Price = product.Price,
             AvailableStock = product.AvailableStock,
             RestockThreshold = product.RestockThreshold,
@@ -221,8 +256,9 @@ public static class CatalogApi
 
         services.Context.CatalogItems.Add(item);
         await services.Context.SaveChangesAsync();
+        await services.CatalogAI.SaveToMemoryAsync(item);
 
-        return TypedResults.Created($"/api/v1/catalog/items/{item.Id}");
+        return TypedResults.Created($"/api/catalog/items/{item.Id}");
     }
 
     public static async Task<Results<NoContent, NotFound>> DeleteItemById(
