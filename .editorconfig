@@ -127,10 +127,6 @@ csharp_preserve_single_line_blocks = true
 ###############################
 # VB Coding Conventions       #
 ###############################
-
-# SKEXP0020: Type is for evaluation purposes only and is subject to change or removal in future updates. Suppress this diagnostic to proceed.
-dotnet_diagnostic.SKEXP0020.severity = silent
-
 [*.vb]
 # Modifier preferences
 visual_basic_preferred_modifier_order = Partial,Default,Private,Protected,Public,Friend,NotOverridable,Overridable,MustOverride,Overloads,Overrides,MustInherit,NotInheritable,Static,Shared,Shadows,ReadOnly,WriteOnly,Dim,Const,WithEvents,Widening,Narrowing,Custom,Async:suggestion
