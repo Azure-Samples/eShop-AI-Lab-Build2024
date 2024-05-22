@@ -11,7 +11,7 @@ With the solution open, it’s time to set up your development environment:
 
 - Open the Command Line Interface (CLI): Navigate to `View -> Terminal` or use the shortcut Ctrl + ` to open the integrated terminal within Visual Studio.
 
-![Captura de tela 2024-05-09 114025.png](docs/ai-lab/img/Captura%20de%20tela%202024-05-09%20114025.png)
+![Captura de tela 2024-05-09 114025.png](/docs/ai-lab/img/Captura%20de%20tela%202024-05-09%20114025.png)
 
 - Navigate to the Project Folder: Use the command `cd .\src\eShop.AppHost\` to change directories to the eShop.AppHost folder, where you’ll be running commands to set up the project.
 
