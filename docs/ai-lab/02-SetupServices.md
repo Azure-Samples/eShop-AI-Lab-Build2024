@@ -55,3 +55,5 @@ Finally, it’s time to see eShop in action:
 - In case of it not loading properly, just kill the application and reload it again.
 
 Now, let's configure eShop to receive AI Capabilities. Going to the next step to configure the application to use the AI features that we are going to implement.
+
+[Next Step: Configure Aspire](03-ConfigureAspire.md)

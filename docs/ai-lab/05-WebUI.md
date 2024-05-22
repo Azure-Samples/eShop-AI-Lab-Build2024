@@ -32,3 +32,5 @@ This is the interface for the "chat" endpoint in the CatalogAPI and adding some 
 1. Run the application with **Ctrl + F5**
 
 Now, our eShop has a chatbot, but without communicating to our Catalog Application data. We need to create Azure OpenAi connections for our data with Embeddings. Let's configure our CatalogAPI to do it.
+
+[Next Step: Configure CatalogAPI](06-CatalogAPI.md)

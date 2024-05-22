@@ -26,3 +26,5 @@ For this hands-on lab, we have prepared the following environment for you:
 Whether you choose to follow along in the lab or prefer to explore at your own pace locally, we’ve got you covered. For access to all the resources you need, including the GitHub repository, [click here to check the guide for local deployment](https://github.com/Azure-Samples/eShop-AI-Lab-Build2024).
 
 Let’s elevate your .NET applications to new heights with Azure AI. We can’t wait to see what you’ll build!
+
+[Next Step: Setup Azure Services](02-SetupServices.md)

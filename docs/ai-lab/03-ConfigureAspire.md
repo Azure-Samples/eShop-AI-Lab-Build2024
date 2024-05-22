@@ -99,3 +99,5 @@ Before beginning our journey to add Artificial Intelligence, we need to configur
 ![Captura de tela 2024-05-17 002221.png](/docs/ai-lab/img/Captura%20de%20tela%202024-05-17%20002221.png)
 
 With the Aspire with the variables set, we need to configure the Azure OpenAI component.
+
+[Next Step: Configure Azure OpenAI Component](04-ConfigureAspireComponent.md)

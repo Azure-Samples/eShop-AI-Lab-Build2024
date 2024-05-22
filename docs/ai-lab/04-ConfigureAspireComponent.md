@@ -50,3 +50,5 @@ For our Azure OpenAI to work properly, we need to add Semantic Kernel to the equ
    - The block adds AI Services to our WebApp container in the application, with Aspire, the Chat Model and Semantic Kernel.
 
 Great work! Now, let's add some UI to have our chat to pop!
+
+[Next Step: Setting up the WebApp AI Chat](05-WebUI.md)
