@@ -82,41 +82,39 @@ With all the settings done, we need now to implement some of the AI features for
 
 1.  With the services developed, we can implement to our Catalog container the AI functions to get the data.
 
-        - For the application to use the RAG (Retrieval Augmented Generation) pattern, it needs the information to be stored in the Vector Database so it can be retrieved to add context to our prompt. To do this, the Catalog API needs some updates in some functions and classes.
-        - First, in `./Catalog.API/Apis/CatalogApi.cs`.
+   - For the application to use the RAG (Retrieval Augmented Generation) pattern, it needs the information to be stored in the Vector Database so it can be retrieved to add context to our prompt. To do this, the Catalog API needs some updates in some functions and classes.
+   - First, in `./Catalog.API/Apis/CatalogApi.cs`.
+   - Search for `// TODO - AI features` with a `throw new NotImplementedException();`
+   - We are going to implement the `GetItemsBySemanticRelevance` function to search the relevance of the items depending on similarity from the request.
+   - Delete the `throw new NotImplementedException();` and replace with:
 
-          - Search for `// TODO - AI features` with a `throw new NotImplementedException();`
-          - We are going to implement the `GetItemsBySemanticRelevance` function to search the relevance of the items depending on similarity from the request.
-          - Delete the `throw new NotImplementedException();` and replace with:
+```csharp
+List<CatalogItem> itemsOnPage = [];
 
-            ```csharp
-            List<CatalogItem> itemsOnPage = [];
+// Get the total number of items
+var totalItems = await services.Context.CatalogItems
+	.LongCountAsync();
+var itemsWithDistance = services.CatalogAI.SearchMemoryAsync(text, pageSize);
+await foreach (var item in itemsWithDistance)
+{
+	var catalogItem = await services.Context.CatalogItems.FindAsync(int.Parse(item.Metadata.Id));
+	itemsOnPage.Add(catalogItem);
+}
 
-            // Get the total number of items
-            var totalItems = await services.Context.CatalogItems
-                .LongCountAsync();
-            var itemsWithDistance = services.CatalogAI.SearchMemoryAsync(text, pageSize);
+return TypedResults.Ok(new PaginatedItems<CatalogItem>(pageIndex, pageSize, totalItems, itemsOnPage));
+```
 
-            await foreach (var item in itemsWithDistance)
-            {
-                var catalogItem = await services.Context.CatalogItems.FindAsync(int.Parse(item.Metadata.Id));
-                itemsOnPage.Add(catalogItem);
-            }
+   - Next, search for `// TODO: Update the AI with data change`.
+   - Add the following line: `await services.CatalogAI.SaveToMemoryAsync(catalogItem);`
+   - Lastly, search for `// TODO: Update AI with new catalog item`.
+   - Add the following line: `await services.CatalogAI.SaveToMemoryAsync(item);`
+   - Both itens deal when an item updated in `UpdateItem` or a new item is added `CreateItem`, updating the AI to add the description to be searchable for our Prompt augmentation with Semantic Kernel.
 
-            return TypedResults.Ok(new PaginatedItems<CatalogItem>(pageIndex, pageSize, totalItems, itemsOnPage));
-            ```
-
-          - Next, search for `// TODO: Update the AI with data change`.
-          - Add the following line: `await services.CatalogAI.SaveToMemoryAsync(catalogItem);`
-          - Lastly, search for `// TODO: Update AI with new catalog item`.
-          - Add the following line: `await services.CatalogAI.SaveToMemoryAsync(item);`
-          - Both itens deal when an item updated in `UpdateItem` or a new item is added `CreateItem`, updating the AI to add the description to be searchable for our Prompt augmentation with Semantic Kernel.
-
-        - Updating `./Catalog.API/Extensions/Extensions.cs`.
+   - Updating `./Catalog.API/Extensions/Extensions.cs`.
           ![Captura de tela 2024-05-20 070448-2.png](/docs/ai-lab/img/Captura%20de%20tela%202024-05-20%20070448-2.png)
 
-          - This adds the Catalog API our extensions for AI.
-          - First, let's add the libraries.
+   - This adds the Catalog API our extensions for AI.
+   - First, let's add the libraries.
 
             ```csharp
             using Microsoft.SemanticKernel;
@@ -124,26 +122,25 @@ With all the settings done, we need now to implement some of the AI features for
             using Microsoft.SemanticKernel.Memory;
             ```
 
-          - Lastly under `builder.Services.AddOptions<CatalogOptions>()
+   - Lastly under `builder.Services.AddOptions<CatalogOptions>().BindConfiguration(nameof(CatalogOptions));`
+   - Add the funcionality to generate the information communicating with the AzureOpenAI API, Semantic Kernel and the models with the following.
 
-    .BindConfiguration(nameof(CatalogOptions));` Add the funcionality to generate the information communicating with the AzureOpenAI API, Semantic Kernel and the models with the following.
-
-                 ```csharp
-                 if (!string.IsNullOrWhiteSpace(builder.Configuration.GetConnectionString("openai")))
-                 {
-                     builder.AddAzureOpenAIClient("openai");
-                     builder.Services.AddAzureOpenAITextEmbeddingGeneration(
-                         builder.Configuration["AIOptions:OpenAI:EmbeddingName"] ?? "text-embedding-3-small",
-                         dimensions: CatalogAI.EmbeddingDimensions);
-                     builder.AddKeyedNpgsqlDataSource("catalogdb", null, builder => builder.UseVector());
-                     builder.Services.AddSingleton<IMemoryStore, PostgresMemoryStore>(provider =>
-                     {
-                         var dataSource = provider.GetRequiredKeyedService<NpgsqlDataSource>("catalogdb");
-                         return new(dataSource, CatalogAI.EmbeddingDimensions);
-                     });
-                     builder.Services.AddSingleton<ISemanticTextMemory, SemanticTextMemory>();
-                 }
-                 ```
+```csharp
+if (!string.IsNullOrWhiteSpace(builder.Configuration.GetConnectionString("openai")))
+{
+	builder.AddAzureOpenAIClient("openai");
+        builder.Services.AddAzureOpenAITextEmbeddingGeneration(
+		builder.Configuration["AIOptions:OpenAI:EmbeddingName"] ?? "text-embedding-3-small",
+                dimensions: CatalogAI.EmbeddingDimensions);
+        builder.AddKeyedNpgsqlDataSource("catalogdb", null, builder => builder.UseVector());
+        builder.Services.AddSingleton<IMemoryStore, PostgresMemoryStore>(provider =>
+                {
+			var dataSource = provider.GetRequiredKeyedService<NpgsqlDataSource>("catalogdb");
+                        return new(dataSource, CatalogAI.EmbeddingDimensions);
+                 });
+        builder.Services.AddSingleton<ISemanticTextMemory, SemanticTextMemory>();
+}
+```
 
 1.  Now, extend the CatalogContextSeed to seed the Semantic Kernel memory into our database and use it when needed:
 
