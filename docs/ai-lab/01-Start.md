@@ -1,4 +1,4 @@
-Learn how to easily integrate AI into your .NET apps
+# Learn how to easily integrate AI into your .NET apps
 
 ## Introduction
 
