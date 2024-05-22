@@ -2,9 +2,9 @@
 
 A reference .NET application implementing an eCommerce web site using a services-based architecture.
 
-![eShop Reference Application architecture diagram](img/eshop_architecture.png)
+![eShop Reference Application architecture diagram](/docs/ai-lab/img/eshop_architecture.png)
 
-![eShop homepage screenshot](img/eshop_homepage.png)
+![eShop homepage screenshot](/docs/ai-lab/img/eshop_homepage.png)
 
 ## Getting Started
 
@@ -17,28 +17,34 @@ A reference .NET application implementing an eCommerce web site using a services
     - `.NET Aspire SDK` component in `Individual components`.
 - Install the latest [.NET 8 SDK](https://github.com/dotnet/installer#installers-and-binaries)
 - On Mac/Linux (or if not using Visual Studio), install the Aspire workload with the following commands:
+
 ```powershell
 dotnet workload update
 dotnet workload install aspire
 dotnet restore eShop.Web.slnf
 ```
-- Install & start Docker Desktop:  https://docs.docker.com/engine/install/
+
+- Install & start Docker Desktop: https://docs.docker.com/engine/install/
 
 ### Running the solution
 
 > [!WARNING]
 > Remember to ensure that Docker is started
 
-* (Windows only) Run the application from Visual Studio:
- - Open the `eShop.Web.slnf` file in Visual Studio
- - Ensure that `eShop.AppHost.csproj` is your startup project
- - Hit Ctrl-F5 to launch Aspire
+- (Windows only) Run the application from Visual Studio:
 
-* Or run the application from your terminal:
+* Open the `eShop.Web.slnf` file in Visual Studio
+* Ensure that `eShop.AppHost.csproj` is your startup project
+* Hit Ctrl-F5 to launch Aspire
+
+- Or run the application from your terminal:
+
 ```powershell
 dotnet run --project src/eShop.AppHost/eShop.AppHost.csproj
 ```
+
 then look for lines like this in the console output in order to find the URL to open the Aspire dashboard:
+
 ```sh
 Now listening on: http://localhost:18848
 ```
@@ -53,29 +59,37 @@ You can use the [Azure Developer CLI](https://aka.ms/azd) to run this project on
 
 - Install [azd](https://aka.ms/azure-dev/install).
 - Log in `azd` (if you haven't done it before) to your Azure account:
+
 ```sh
 azd auth login
 ```
+
 - Initialize `azd` from the root of the repo.
+
 ```sh
 azd init
 ```
+
 - During init:
+
   - Select `Use code in the current directory`. Azd will automatically detect the Dotnet Aspire project.
   - Confirm `.Net (Aspire)` and continue.
   - Select which services to expose to the Internet (exposing `webapp` is enough to test the sample).
   - Finalize the initialization by giving a name to your environment.
 
 - Create Azure resources and deploy the sample by running:
+
 ```sh
 azd up
 ```
+
 Notes:
-  - The operation takes a few minutes the first time it is ever run for an environment.
-  - At the end of the process, `azd` will display the `url` for the webapp. Follow that link to test the sample.
-  - You can run `azd up` after saving changes to the sample to re-deploy and update the sample.
-  - Report any issues to [azure-dev](https://github.com/Azure/azure-dev/issues) repo.
-  - [FAQ and troubleshoot](https://learn.microsoft.com/azure/developer/azure-developer-cli/troubleshoot?tabs=Browser) for azd.
+
+- The operation takes a few minutes the first time it is ever run for an environment.
+- At the end of the process, `azd` will display the `url` for the webapp. Follow that link to test the sample.
+- You can run `azd up` after saving changes to the sample to re-deploy and update the sample.
+- Report any issues to [azure-dev](https://github.com/Azure/azure-dev/issues) repo.
+- [FAQ and troubleshoot](https://learn.microsoft.com/azure/developer/azure-developer-cli/troubleshoot?tabs=Browser) for azd.
 
 ## Contributing
 
