@@ -11,11 +11,11 @@ With the solution open, it’s time to set up your development environment:
 
 - Open the Command Line Interface (CLI): Navigate to `View -> Terminal` or use the shortcut Ctrl + ` to open the integrated terminal within Visual Studio.
 
-!IMAGE[Captura de tela 2024-05-09 114025.png](/docs/ai-lab/img/Captura de tela 2024-05-09 114025.png)
+![Captura de tela 2024-05-09 114025.png](docs/ai-lab/img/Captura%20de%20tela%202024-05-09%20114025.png)
 
 - Navigate to the Project Folder: Use the command `cd .\src\eShop.AppHost\` to change directories to the eShop.AppHost folder, where you’ll be running commands to set up the project.
 
-!IMAGE[Captura de tela 2024-05-09 124556.png](/docs/ai-lab/img/Captura de tela 2024-05-09 124556.png)
+![Captura de tela 2024-05-09 124556.png](/docs/ai-lab/img/Captura%20de%20tela%202024-05-09%20124556.png)
 
 To create our Azure AI services, we need to do the following commands:
 
@@ -38,19 +38,19 @@ Finally, it’s time to see eShop in action:
 - Press Ctrl + F5 to run the application without debugging.
 - If Visual Studio asks you to run Docker, press `Yes` to run the background applications.
 
-!IMAGE[Captura de tela 2024-05-09 114245.png](/docs/ai-lab/img/Captura de tela 2024-05-09 114245.png)
+![Captura de tela 2024-05-09 114245.png](/docs/ai-lab/img/Captura%20de%20tela%202024-05-09%20114245.png)
 
 - You are going to get greeted by a Console and a Login screen, follow the instructions to see the dashboard.
 
-!IMAGE[Captura de tela 2024-05-09 115710.png](/docs/ai-lab/img/Captura de tela 2024-05-09 115710.png)
+![Captura de tela 2024-05-09 115710.png](/docs/ai-lab/img/Captura%20de%20tela%202024-05-09%20115710.png)
 
-!IMAGE[Captura de tela 2024-05-09 115537.png](/docs/ai-lab/img/Captura de tela 2024-05-09 115537.png)
+![Captura de tela 2024-05-09 115537.png](/docs/ai-lab/img/Captura%20de%20tela%202024-05-09%20115537.png)
 
 - At the dashboard, you will have access to all services and click on the WebApp to see our eShop without the AI features implemented.
 
-!IMAGE[Captura de tela 2024-05-09 130427.png](/docs/ai-lab/img/Captura de tela 2024-05-09 130427.png)
+![Captura de tela 2024-05-09 130427.png](/docs/ai-lab/img/Captura%20de%20tela%202024-05-09%20130427.png)
 
-!IMAGE[Captura de tela 2024-05-09 115743.png](/docs/ai-lab/img/Captura de tela 2024-05-09 115743.png)
+![Captura de tela 2024-05-09 115743.png](/docs/ai-lab/img/Captura%20de%20tela%202024-05-09%20115743.png)
 
 - In case of it not loading properly, just kill the application and reload it again.
 

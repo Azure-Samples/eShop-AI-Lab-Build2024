@@ -6,11 +6,11 @@ This is the interface for the "chat" endpoint in the CatalogAPI and adding some 
 
 1. For this, we need to create a new component in the `Components` folder at `.\WebApp\Components\`. For this, create a new folder in `.\WebApp\` called 'Chatbot'
 
-   !IMAGE[Captura de tela 2024-05-17 152932.png](/docs/ai-lab/img/Captura de tela 2024-05-17 152932.png)
+   ![Captura de tela 2024-05-17 152932.png](/docs/ai-lab/img/Captura%20de%20tela%202024-05-17%20152932.png)
 
 1. Add the UI Elements from the folder [Chatbot.zip](Chatbot.zip) asset. Copy and paste them in the solution in the folder `.src/Components/Chatbot/`
 
-   !IMAGE[Captura de tela 2024-05-17 153022.png](/docs/ai-lab/img/Captura de tela 2024-05-17 153022.png)
+   ![Captura de tela 2024-05-17 153022.png](/docs/ai-lab/img/Captura%20de%20tela%202024-05-17%20153022.png)
 
 1. Change the file `/WebApp/Components/Layout/MainLayout.razor` with the following code:
 

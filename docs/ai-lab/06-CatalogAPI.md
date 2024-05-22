@@ -23,13 +23,13 @@ With all the settings done, we need now to implement some of the AI features for
 
     - To end our package adventure, add the following into the Catalog.API .csproj's PropertyGroup : `<NoWarn>$(NoWarn);SKEXP0001;SKEXP0010;SKEXP0020</NoWarn>`.
 
-      !IMAGE[Captura de tela 2024-05-17 155704.png](/docs/ai-lab/img/Captura de tela 2024-05-17 155704.png)
+      ![Captura de tela 2024-05-17 155704.png](/docs/ai-lab/img/Captura%20de%20tela%202024-05-17%20155704.png)
 
 1.  With this, we can now create some services for our application in Catalog.
 
     - First, let's add functionality to our services interface. Go to `Catalog.API -> Services -> ICatalogAI.cs`, open the file in Visual Studio.
 
-    !IMAGE[Captura de tela 2024-05-20 070013.png](/docs/ai-lab/img/Captura de tela 2024-05-20 070013.png)
+    ![Captura de tela 2024-05-20 070013.png](/docs/ai-lab/img/Captura%20de%20tela%202024-05-20%20070013.png)
 
     - Let's import our Semantic Kernel Memory package. `using Microsoft.SemanticKernel.Memory;`.
     - Add the following code:
@@ -113,7 +113,7 @@ With all the settings done, we need now to implement some of the AI features for
           - Both itens deal when an item updated in `UpdateItem` or a new item is added `CreateItem`, updating the AI to add the description to be searchable for our Prompt augmentation with Semantic Kernel.
 
         - Updating `./Catalog.API/Extensions/Extensions.cs`.
-          !IMAGE[Captura de tela 2024-05-20 070448-2.png](/docs/ai-lab/img/Captura de tela 2024-05-20 070448-2.png)
+          ![Captura de tela 2024-05-20 070448-2.png](/docs/ai-lab/img/Captura%20de%20tela%202024-05-20%20070448-2.png)
 
           - This adds the Catalog API our extensions for AI.
           - First, let's add the libraries.
@@ -148,7 +148,7 @@ With all the settings done, we need now to implement some of the AI features for
 1.  Now, extend the CatalogContextSeed to seed the Semantic Kernel memory into our database and use it when needed:
 
     - Go to `./Catalog.API/Infrastructure/CatalogContextSeed.cs`
-      !IMAGE[Captura de tela 2024-05-20 070619.png](/docs/ai-lab/img/Captura de tela 2024-05-20 070619.png)
+      ![Captura de tela 2024-05-20 070619.png](/docs/ai-lab/img/Captura%20de%20tela%202024-05-20%20070619.png)
     - Search for `// TODO - seed AI features in database` and replace it with:
 
       ```csharp
@@ -163,8 +163,8 @@ With all the settings done, we need now to implement some of the AI features for
 
 **Run the application with Ctrl + F5**. While our application is indexing our forty element catalog into the database, it will not open the store WebApp. Check the status on **Logs -> catalog-api**.
 
-!IMAGE[Captura de tela 2024-05-20 071200.png](/docs/ai-lab/img/Captura de tela 2024-05-20 071200.png)
+![Captura de tela 2024-05-20 071200.png](/docs/ai-lab/img/Captura%20de%20tela%202024-05-20%20071200.png)
 
 Wait for the catalog elements (Forty) to be indexed, after this, the WebApp with the Chat RAG application is online!
 
-!IMAGE[Captura de tela 2024-05-20 071504.png](/docs/ai-lab/img/Captura de tela 2024-05-20 071504.png)
+![Captura de tela 2024-05-20 071504.png](/docs/ai-lab/img/Captura%20de%20tela%202024-05-20%20071504.png)

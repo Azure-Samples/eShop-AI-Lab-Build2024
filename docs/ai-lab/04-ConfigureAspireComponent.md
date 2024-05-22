@@ -20,7 +20,7 @@ For our Azure OpenAI to work properly, we need to add Semantic Kernel to the equ
 
    - Open the WebApp Extensions file in `./WebApp/Extensions/Extensions.cs`.
 
-     !IMAGE[Captura de tela 2024-05-17 152736.png](/docs/ai-lab/img/Captura de tela 2024-05-17 152736.png)
+     ![Captura de tela 2024-05-17 152736.png](/docs/ai-lab/img/Captura%20de%20tela%202024-05-17%20152736.png)
 
    - Add the following dependencies:
 

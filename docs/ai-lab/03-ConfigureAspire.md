@@ -4,7 +4,7 @@ Before beginning our journey to add Artificial Intelligence, we need to configur
 
 1. First, let's add some packages in `Directory.Packages.props`. Open it in `Solution Items -> Directory.Packages.props`
 
-   !IMAGE[Captura de tela 2024-05-20 064356.png](/docs/ai-lab/img/Captura de tela 2024-05-20 064356.png)
+   ![Captura de tela 2024-05-20 064356.png](/docs/ai-lab/img/Captura%20de%20tela%202024-05-20%20064356.png)
 
 1. On the `<!-- Version together with Aspire -->` block, add the following lines:
 
@@ -24,7 +24,7 @@ Before beginning our journey to add Artificial Intelligence, we need to configur
 
 1. Save the `Directory.Packages.props` file.
 
-   !IMAGE[Captura de tela 2024-05-16 234722.png](/docs/ai-lab/img/Captura de tela 2024-05-16 234722.png)
+   ![Captura de tela 2024-05-16 234722.png](/docs/ai-lab/img/Captura%20de%20tela%202024-05-16%20234722.png)
 
 1. Open the on `eShop.AppHost` csproj. Add the following line to install Aspire Hosting Azure Congnitive Services. `<PackageReference Include="Aspire.Hosting.Azure.CognitiveServices" />`
 
@@ -78,10 +78,10 @@ Before beginning our journey to add Artificial Intelligence, we need to configur
 
 1. Click in the search field at the top of the page and search for **openai**, which will open a list of all Azure OpenAI Service resources. Click on your recently deployed resource and access the Keys and Endpoint in `Resource Management -> Keys and Endpoint`.
 
-!IMAGE[Captura de tela 2024-05-17 001028.png](/docs/ai-lab/img/Captura de tela 2024-05-17 001028.png)
-!IMAGE[Captura de tela 2024-05-17 001141.png](/docs/ai-lab/img/Captura de tela 2024-05-17 001141.png)
-!IMAGE[Captura de tela 2024-05-17 001158.png](/docs/ai-lab/img/Captura de tela 2024-05-17 001158.png)
-!IMAGE[Captura de tela 2024-05-17 001307.png](/docs/ai-lab/img/Captura de tela 2024-05-17 001307.png)
+![Captura de tela 2024-05-17 001028.png](/docs/ai-lab/img/Captura%20de%20tela%202024-05-17%20001028.png)
+![Captura de tela 2024-05-17 001141.png](/docs/ai-lab/img/Captura%20de%20tela%202024-05-17%20001141.png)
+![Captura de tela 2024-05-17 001158.png](/docs/ai-lab/img/Captura%20de%20tela%202024-05-17%20001158.png)
+![Captura de tela 2024-05-17 001307.png](/docs/ai-lab/img/Captura%20de%20tela%202024-05-17%20001307.png)
 
 1. Use the console to add the secrets to our application to access the resources.
 
@@ -92,10 +92,10 @@ Before beginning our journey to add Artificial Intelligence, we need to configur
 
 1. Check on the `Resources` tab, look at the `WebApp project`.
 
-!IMAGE[Captura de tela 2024-05-17 001633.png](/docs/ai-lab/img/Captura de tela 2024-05-17 001633.png)
+![Captura de tela 2024-05-17 001633.png](/docs/ai-lab/img/Captura%20de%20tela%202024-05-17%20001633.png)
 
 1. Scroll and check with the `ConnectionStrings_openai`, to check if it is correct configured and ready to connect with our services that will be implemented.
 
-!IMAGE[Captura de tela 2024-05-17 002221.png](/docs/ai-lab/img/Captura de tela 2024-05-17 002221.png)
+![Captura de tela 2024-05-17 002221.png](/docs/ai-lab/img/Captura%20de%20tela%202024-05-17%20002221.png)
 
 With the Aspire with the variables set, we need to configure the Azure OpenAI component.
