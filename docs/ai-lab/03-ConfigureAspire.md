@@ -8,14 +8,14 @@ Before beginning our journey to add Artificial Intelligence, we need to configur
 
 1. On the `<!-- Version together with Aspire -->` block, add the following lines:
 
-   ```
+   ```csproj
    <PackageVersion Include="Aspire.Hosting.Azure.CognitiveServices" Version="$(AspireVersion)" />
    <PackageVersion Include="Aspire.Azure.AI.OpenAI" Version="$(AspireVersion)" />
    ```
 
 1. Add a new block for the Semantic Kernel NuGet packages:
 
-   ```
+   ```csproj
    <!-- AI -->
    <PackageVersion Include="Microsoft.SemanticKernel" Version="1.11.0" />
    <PackageVersion Include="Microsoft.SemanticKernel.Connectors.Postgres" Version="1.11.0-alpha" />
