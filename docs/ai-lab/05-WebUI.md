@@ -8,7 +8,7 @@ This is the interface for the "chat" endpoint in the CatalogAPI and adding some 
 
    !IMAGE[Captura de tela 2024-05-17 152932.png](/docs/ai-lab/img/Captura de tela 2024-05-17 152932.png)
 
-1. Add the UI Elements from the folder `ChatBotFrontend` on your Desktop. Copy and paste them in the solution in the folder `.src/Components/Chatbot/`
+1. Add the UI Elements from the folder [Chatbot.zip](Chatbot.zip) asset. Copy and paste them in the solution in the folder `.src/Components/Chatbot/`
 
    !IMAGE[Captura de tela 2024-05-17 153022.png](/docs/ai-lab/img/Captura de tela 2024-05-17 153022.png)
 
