@@ -52,7 +52,7 @@ The sample catalog data is defined in [catalog.json](https://github.com/dotnet/e
 
 ## Implement the AI
 
-[Follow the guide to implement AI here!](../main/docs/ai-lab/README.md)
+[Follow the guide to implement AI here!](../main/docs/ai-lab/README.md) and learn more about AI with a Microsoft Learn session: [Infusing your .NET Apps with AI: Practical Tools and Techniques](https://build.microsoft.com/sessions/4bf46250-6959-4df4-957f-b355e723c5c6).
 
 ## Contributing
 
