@@ -130,8 +130,20 @@ public static class CatalogApi
             return await GetItemsByName(paginationRequest, services, text);
         }
 
-        // TODO - AI features
-        throw new NotImplementedException();
+        List<CatalogItem> itemsOnPage = [];
+
+        // Get the total number of items
+        var totalItems = await services.Context.CatalogItems
+            .LongCountAsync();
+        var itemsWithDistance = services.CatalogAI.SearchMemoryAsync(text, pageSize);
+
+        await foreach (var item in itemsWithDistance)
+        {
+            var catalogItem = await services.Context.CatalogItems.FindAsync(int.Parse(item.Metadata.Id));
+            itemsOnPage.Add(catalogItem);
+        }
+
+        return TypedResults.Ok(new PaginatedItems<CatalogItem>(pageIndex, pageSize, totalItems, itemsOnPage));
     }
 
     public static async Task<Ok<PaginatedItems<CatalogItem>>> GetItemsByBrandAndTypeId(
@@ -202,7 +214,7 @@ public static class CatalogApi
         var catalogEntry = services.Context.Entry(catalogItem);
         catalogEntry.CurrentValues.SetValues(productToUpdate);
 
-        // TODO: Update the AI with data change
+        await services.CatalogAI.SaveToMemoryAsync(catalogItem);
 
         var priceEntry = catalogEntry.Property(i => i.Price);
 
@@ -244,8 +256,7 @@ public static class CatalogApi
 
         services.Context.CatalogItems.Add(item);
         await services.Context.SaveChangesAsync();
-
-        // TODO: Update AI with new catalog item
+        await services.CatalogAI.SaveToMemoryAsync(item);
 
         return TypedResults.Created($"/api/catalog/items/{item.Id}");
     }

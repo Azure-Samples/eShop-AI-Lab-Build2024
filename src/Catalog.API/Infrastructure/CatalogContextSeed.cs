@@ -56,7 +56,11 @@ public partial class CatalogContextSeed(
 
             if (catalogAI.IsEnabled)
             {
-                // TODO - seed AI features in database
+                foreach (var catalogItem in catalogItems)
+                {
+                    var id = await catalogAI.SaveToMemoryAsync(catalogItem);
+                    logger.LogInformation("Created memory record for Catalog item with Id {Id}", id);
+                }
             }
 
             await context.CatalogItems.AddRangeAsync(catalogItems);

@@ -1,4 +1,5 @@
 ﻿using System;
+using Azure.AI.OpenAI;
 using eShop.WebApp;
 using eShop.WebAppComponents.Services;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -7,6 +8,10 @@ using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Server;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.JsonWebTokens;
+using Microsoft.SemanticKernel;
+using Microsoft.SemanticKernel.ChatCompletion;
+using Microsoft.SemanticKernel.Connectors.OpenAI;
+using Microsoft.SemanticKernel.TextGeneration;
 using eShop.WebApp.Services.OrderStatus.IntegrationEvents;
 using eShop.Basket.API.Grpc;
 
@@ -95,7 +100,15 @@ public static class Extensions
 
     private static void AddAIServices(this IHostApplicationBuilder builder)
     {
-        // TODO - Register AI
+        var openAIOptions = builder.Configuration.GetSection("AI").Get<AIOptions>()?.OpenAI;
+        var deploymentName = openAIOptions?.ChatModel;
+
+        if (!string.IsNullOrWhiteSpace(builder.Configuration.GetConnectionString("openai")) && !string.IsNullOrWhiteSpace(deploymentName))
+        {
+            builder.Services.AddKernel();
+            builder.AddAzureOpenAIClient("openai");
+            builder.Services.AddAzureOpenAIChatCompletion(deploymentName);
+        }
     }
 
     public static async Task<string?> GetBuyerIdAsync(this AuthenticationStateProvider authenticationStateProvider)

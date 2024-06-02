@@ -10,7 +10,8 @@ var rabbitMq = builder.AddRabbitMQ("eventbus");
 var postgres = builder.AddPostgres("postgres")
     .WithPgAdmin()
     .WithImage("pgvector/pgvector")
-    .WithImageTag("pg16");
+    .WithImageTag("pg16")
+    .WithArgs("-c", "log_statement=all");
 
 var catalogDb = postgres.AddDatabase("catalogdb");
 var identityDb = postgres.AddDatabase("identitydb");
@@ -69,6 +70,46 @@ var webApp = builder.AddProject<Projects.WebApp>("webapp", launchProfileName)
     .WithReference(orderingApi)
     .WithReference(rabbitMq)
     .WithEnvironment("IdentityUrl", identityEndpoint);
+
+// set to true if you want to use OpenAI
+bool useOpenAI = true;
+if (useOpenAI)
+{
+    const string openAIName = "openai";
+    const string textEmbeddingName = "text-embedding-3-small";
+    const string chatModelName = "gpt-35-turbo-16k";
+
+    // to use an existing OpenAI resource, add the following to the AppHost user secrets:
+    // "ConnectionStrings": {
+    //   "openai": "Key=<API Key>" (to use https://api.openai.com/)
+    //     -or-
+    //   "openai": "Endpoint=https://<name>.openai.azure.com/" (to use Azure OpenAI)
+    // }
+    IResourceBuilder<IResourceWithConnectionString> openAI;
+    if (builder.Configuration.GetConnectionString(openAIName) is not null)
+    {
+        openAI = builder.AddConnectionString(openAIName);
+    }
+    else
+    {
+        // to use Azure provisioning, add the following to the AppHost user secrets:
+        // "Azure": {
+        //   "SubscriptionId": "<your subscription ID>"
+        //   "Location": "<location>"
+        // }
+        openAI = builder.AddAzureOpenAI(openAIName)
+            .AddDeployment(new AzureOpenAIDeployment(chatModelName, "gpt-35-turbo", "0613"))
+            .AddDeployment(new AzureOpenAIDeployment(textEmbeddingName, "text-embedding-3-small", "1"));
+    }
+
+    catalogApi
+        .WithReference(openAI)
+        .WithEnvironment("AI__OPENAI__EMBEDDINGNAME", textEmbeddingName);
+
+    webApp
+        .WithReference(openAI)
+        .WithEnvironment("AI__OPENAI__CHATMODEL", chatModelName); ;
+}
 
 // Wire up the callback urls (self referencing)
 webApp.WithEnvironment("CallBackUrl", webApp.GetEndpoint(launchProfileName));
