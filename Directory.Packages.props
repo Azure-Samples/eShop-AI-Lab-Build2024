@@ -7,7 +7,7 @@
     <EfVersion>8.0.4</EfVersion>
     <AspireVersion>8.0.0-preview.6.24214.1</AspireVersion>
     <GrpcVersion>2.62.0</GrpcVersion>
-    <DuendeVersion>7.0.4</DuendeVersion>
+    <DuendeVersion>7.0.5</DuendeVersion>
     <ApiVersioningVersion>8.1.0</ApiVersioningVersion>
   </PropertyGroup>
   <ItemGroup>
